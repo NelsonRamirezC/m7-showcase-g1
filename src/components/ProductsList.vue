@@ -13,7 +13,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="producto in productos" :key="producto.id">
+                <tr v-for="producto in productos" :key="producto.id" class="align-middle">
                     <th scope="row">{{ producto.id }}</th>
                     <td>{{ producto.nombre }}</td>
                     <td>
@@ -43,8 +43,4 @@ defineProps(["productos"]);
     width: 75px;
 }
 
-th,
-td {
-    align-content: center;
-}
 </style>
