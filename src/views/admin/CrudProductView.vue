@@ -6,11 +6,8 @@
     <main class="container">
 
         <section>
-            <ul v-if="productsStore.products.length > 0">
-                <li v-for="product in productsStore.products" :key="product.id">{{ product.nombre }}</li>
-            </ul>
+            <ProductsList v-if="productsStore.products.length > 0" :productos="productsStore.products" />
             <p v-else>No hay productor para mostrar...</p>
-
         </section>
 
     </main>
@@ -20,6 +17,7 @@
 import HeaderComp from '@/components/HeaderComp.vue';
 import { onMounted } from 'vue';
 import { useProductsStore } from '@/stores/products.store.js';
+import ProductsList from '@/components/ProductsList.vue';
 
 const productsStore = useProductsStore();
 
