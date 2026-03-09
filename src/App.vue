@@ -1,16 +1,13 @@
 <template>
-  <nav>
-    <RouterLink to="/">Home</RouterLink>
-    
-  </nav>
+
+  <NavBar />
 
   <RouterView />
 </template>
 
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+import NavBar from './components/NavBar.vue';
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

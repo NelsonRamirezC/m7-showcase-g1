@@ -1,9 +1,7 @@
 <template>
-
-    <HeaderComp>Página Home</HeaderComp>
-  <main class="container">
-
-  </main>
+    <div>
+        <HeaderComp>Página CRUD Productos</HeaderComp>
+    </div>
 </template>
 
 <script setup>
