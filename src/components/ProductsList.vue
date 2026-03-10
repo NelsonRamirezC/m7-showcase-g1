@@ -24,7 +24,8 @@
                     <td>{{ producto.precio }}</td>
                     <td>
                         <button class="btn btn-warning">Editar</button>
-                        <button class="btn btn-danger ms-1">Eliminar</button>
+                        <button class="btn btn-danger ms-1"
+                            @click="eliminar(producto.id, producto.nombre)">Eliminar</button>
                     </td>
                 </tr>
             </tbody>
@@ -33,7 +34,29 @@
 </template>
 
 <script setup>
+
+import { useProductsStore } from '@/stores/products.store.js';
+const productsStore = useProductsStore();
+
 defineProps(["productos"]);
+
+
+const eliminar = async (id, nombre) => {
+    try {
+
+        if (confirm("Estás seguro que deseas eliminar el producto: " + nombre)) {
+            let respuesta = await productsStore.deleteProduct(id);
+            if (respuesta.error) {
+                return alert(respuesta.error)
+            }
+
+            alert(respuesta.success);
+        }
+
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 </script>
 
@@ -41,5 +64,4 @@ defineProps(["productos"]);
 .table img {
     width: 75px;
 }
-
 </style>

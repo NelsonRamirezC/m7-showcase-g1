@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
-import { collection, getDocs, addDoc } from 'firebase/firestore'
+import { collection, getDocs, addDoc, doc, deleteDoc } from 'firebase/firestore'
 import { db } from '@/firebaseConfig.js'
 
 export const useProductsStore = defineStore('products', () => {
@@ -51,5 +51,20 @@ export const useProductsStore = defineStore('products', () => {
     }
   }
 
-  return { products, categories, fetchProducts, createProduct }
+  const deleteProduct = async (id) => {
+    try {
+      await deleteDoc(doc(db, 'productos', id))
+
+      let indexProduct = products.value.findIndex((p) => p.id == id)
+
+      products.value.splice(indexProduct, 1)
+
+      return { success: 'Producto eliminado correctamente' }
+    } catch (error) {
+      console.log(error)
+      return { error: 'Error al intentar eliminar el producto con id: ' + id }
+    }
+  }
+
+  return { products, categories, fetchProducts, createProduct, deleteProduct }
 })
