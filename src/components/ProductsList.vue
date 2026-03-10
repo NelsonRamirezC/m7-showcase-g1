@@ -23,7 +23,7 @@
                     <td>{{ producto.stock }}</td>
                     <td>{{ producto.precio }}</td>
                     <td>
-                        <button class="btn btn-warning">Editar</button>
+                        <button class="btn btn-warning" @click="emit('modoEdicion', producto.id)">Editar</button>
                         <button class="btn btn-danger ms-1"
                             @click="eliminar(producto.id, producto.nombre)">Eliminar</button>
                     </td>
@@ -34,9 +34,11 @@
 </template>
 
 <script setup>
-
+import { defineEmits } from 'vue';
 import { useProductsStore } from '@/stores/products.store.js';
 const productsStore = useProductsStore();
+
+const emit = defineEmits(["modoEdicion"]);
 
 defineProps(["productos"]);
 

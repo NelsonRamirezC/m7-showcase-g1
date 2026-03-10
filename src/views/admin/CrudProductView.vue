@@ -37,14 +37,17 @@
                     </select>
                 </div>
                 <div class="py-3">
-                    <button type="submit" class="btn btn-primary">Crear</button>
+                    <button type="submit" class="btn btn-primary" v-if="!modoEdicion">Crear</button>
+                    <button type="submit" class="btn btn-warning" v-if="modoEdicion">Editar</button>
+                    <button type="submit" class="btn btn-secondary ms-1" @click="resetForm">Reset</button>
                 </div>
             </form>
 
         </section>
         <section class="py-3">
             <h2 class="text-center">Listado de productos.</h2>
-            <ProductsList v-if="productsStore.products.length > 0" :productos="productsStore.products" />
+            <ProductsList v-if="productsStore.products.length > 0" :productos="productsStore.products"
+                @modoEdicion="edicionProducto" />
             <p v-else>No hay productor para mostrar...</p>
         </section>
 
@@ -71,6 +74,8 @@ const producto = ref(
     }
 );
 
+const modoEdicion = ref(false);
+
 const resetForm = () => {
 
     producto.value.id = "";
@@ -78,17 +83,20 @@ const resetForm = () => {
     producto.value.descripcion = "";
     producto.value.precio = 0;
     producto.value.stock = 0;
-    producto.value.imagen = "https= //placehold.co/600x400";
+    producto.value.imagen = "https://placehold.co/600x400";
     producto.value.categoria = "";
-};
 
-const modoEdicion = ref(false);
+    modoEdicion.value = false;
+
+};
 
 
 const create = async () => {
     try {
 
         let respuesta = await productsStore.createProduct({ ...producto.value });
+
+
 
         if (respuesta.error) {
             return alert(respuesta.error)
@@ -103,10 +111,42 @@ const create = async () => {
 };
 
 
+const edicionProducto = (id) => {
+    modoEdicion.value = true;
+
+    let productoStore = productsStore.products.find(p => p.id == id);
+
+    producto.value.id = productoStore.id;
+    producto.value.nombre = productoStore.nombre;
+    producto.value.descripcion = productoStore.descripcion;
+    producto.value.precio = productoStore.precio;
+    producto.value.stock = productoStore.stock;
+    producto.value.imagen = productoStore.imagen;
+    producto.value.categoria = productoStore.categoria;
+}
+
+const update = async () => {
+    try {
+
+        let respuesta = await productsStore.updateProduct({ ...producto.value });
+
+        if (respuesta.error) {
+            return alert(respuesta.error)
+        };
+
+        resetForm();
+        alert(respuesta.success);
+
+    } catch (error) {
+        console.log(error);
+    }
+
+}
+
 const createOrUpdate = () => {
 
     if (modoEdicion.value) {
-        //editamos
+        update();
     } else {
         create();
     }

@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
-import { collection, getDocs, addDoc, doc, deleteDoc } from 'firebase/firestore'
+import { collection, getDocs, addDoc, doc, deleteDoc, updateDoc } from 'firebase/firestore'
 import { db } from '@/firebaseConfig.js'
 
 export const useProductsStore = defineStore('products', () => {
@@ -66,5 +66,24 @@ export const useProductsStore = defineStore('products', () => {
     }
   }
 
-  return { products, categories, fetchProducts, createProduct, deleteProduct }
+  const updateProduct = async (producto) => {
+    try {
+      const docRef = doc(db, 'productos', producto.id)
+
+      let idProducto = producto.id
+      delete producto.id
+      await updateDoc(docRef, { ...producto })
+
+      let indexProduct = products.value.findIndex((p) => p.id == idProducto)
+
+      products.value.splice(indexProduct, 1, { id: idProducto, ...producto })
+
+      return { success: 'Producto actualizado con éxito.' }
+    } catch (error) {
+      console.log(error)
+      return { error: 'Error al intentar actualizar el producto.' }
+    }
+  }
+
+  return { products, categories, fetchProducts, createProduct, deleteProduct, updateProduct }
 })
