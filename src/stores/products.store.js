@@ -1,12 +1,14 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
-import { collection, getDocs } from 'firebase/firestore'
+import { collection, getDocs, addDoc } from 'firebase/firestore'
 import { db } from '@/firebaseConfig.js'
 
 export const useProductsStore = defineStore('products', () => {
   //ESTADOS
   const products = ref([])
+
+  const categories = ref(['Hogar', 'Cocina', 'Jardín'])
 
   //GETTERS
   // const doubleCount = computed(() => count.value * 2)
@@ -32,5 +34,22 @@ export const useProductsStore = defineStore('products', () => {
     }
   }
 
-  return { products, fetchProducts }
+  const createProduct = async (producto) => {
+    try {
+      const productosRef = collection(db, 'productos')
+
+      delete producto.id
+
+      const docRef = await addDoc(productosRef, { ...producto })
+
+      products.value.push({ id: docRef.id, ...producto })
+
+      return { success: `producto creado con id: ${docRef.id}` }
+    } catch (error) {
+      console.log(error)
+      return { error: 'No se pudo crear el producto en la base de datos.' }
+    }
+  }
+
+  return { products, categories, fetchProducts, createProduct }
 })
