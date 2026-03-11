@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useUserStore } from '@/stores/user.store'
+import { auth } from '@/firebaseConfig'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -10,14 +12,59 @@ const router = createRouter({
     },
     {
       path: '/admin',
+      meta: { requiresAuth: true, requiresRole: 'admin' },
       children: [
-        { 
-          path: 'products', 
-          name: 'crud-products', 
-          component: () => import('../views/admin/CrudProductView.vue') },
+        {
+          path: 'products',
+          name: 'crud-products',
+          component: () => import('../views/admin/CrudProductView.vue'),
+        },
       ],
     },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/LoginView.vue'),
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import('../views/RegisterView.vue'),
+    },
   ],
+})
+
+router.beforeEach(async (to, from) => {
+  const requiresAuth = to.meta?.requiresAuth
+  const requiresRole = to.meta?.requiresRole
+
+  const userStore = useUserStore()
+
+  // ensure we know the current auth state before guarding
+  const firebaseUser = await new Promise((resolve) => {
+    const unsubscribe = auth.onAuthStateChanged((u) => {
+      unsubscribe()
+      resolve(u)
+    })
+  })
+
+  // ensure store has profile data when user is logged in
+  if (firebaseUser && !userStore.user) {
+    await userStore.setUserFromAuth(firebaseUser)
+  }
+
+  const isAuth = userStore.isAuthenticated || !!firebaseUser
+
+  if (requiresAuth && !isAuth) {
+    return { name: 'login' }
+  }
+
+  if (requiresRole) {
+    const role = userStore.user?.role || null
+    if (role !== requiresRole) return { name: 'home' }
+  }
+
+  return true
 })
 
 export default router

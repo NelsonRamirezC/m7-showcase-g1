@@ -12,7 +12,18 @@
                     <div class="navbar-nav ms-auto">
                         <RouterLink to="/" class="nav-link">Home</RouterLink>
 
-                        <RouterLink :to="{ name: 'crud-products' }" class="nav-link">Crud productos</RouterLink>
+                        <RouterLink v-if="isAdmin" :to="{ name: 'crud-products' }" class="nav-link">Crud productos
+                        </RouterLink>
+
+                        <template v-if="!isAuth">
+                            <RouterLink to="/login" class="nav-link">Login</RouterLink>
+                            <RouterLink to="/register" class="nav-link">Register</RouterLink>
+                        </template>
+
+                        <template v-else>
+                            <span class="nav-link">Hola, {{ displayName }}</span>
+                            <a class="nav-link" href="#" @click.prevent="onLogout">Logout</a>
+                        </template>
                     </div>
                 </div>
             </div>
@@ -21,7 +32,33 @@
 </template>
 
 <script setup>
+import { RouterLink, useRouter } from 'vue-router'
+import { computed } from 'vue'
+import { useUserStore } from '@/stores/user.store.js'
+import { logout } from '@/services/auth.js'
 
+const router = useRouter()
+const userStore = useUserStore()
+
+const isAuth = computed(() => userStore.isAuthenticated)
+
+const isAdmin = computed(() => userStore.user?.role === 'admin')
+
+const displayName = computed(() => {
+    const u = userStore.user
+    if (!u) return ''
+    return `${u.firstname || ''} ${u.lastname || ''}`.trim() || u.email
+})
+
+async function onLogout() {
+    try {
+        await logout()
+        userStore.clearUser()
+        router.push({ name: 'login' })
+    } catch (e) {
+        console.error(e)
+    }
+}
 </script>
 
 <style scoped></style>
