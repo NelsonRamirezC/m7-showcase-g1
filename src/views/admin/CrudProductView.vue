@@ -59,6 +59,7 @@ import HeaderComp from '@/components/HeaderComp.vue';
 import { onMounted, ref } from 'vue';
 import { useProductsStore } from '@/stores/products.store.js';
 import ProductsList from '@/components/ProductsList.vue';
+import Swal from 'sweetalert2';
 
 const productsStore = useProductsStore();
 
@@ -128,19 +129,30 @@ const edicionProducto = (id) => {
 const update = async () => {
     try {
 
-        let respuesta = await productsStore.updateProduct({ ...producto.value });
-
-        if (respuesta.error) {
-            return alert(respuesta.error)
-        };
-
-        resetForm();
-        alert(respuesta.success);
+        Swal.fire({
+            title: "Estás seguro que deseas a actualizar el producto",
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: "Actualizar",
+            denyButtonText: `No actualizar`
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    let respuesta = await productsStore.updateProduct({ ...producto.value });
+                    Swal.fire(respuesta.success, "", "success");
+                } catch (error) {
+                    Swal.fire(respuesta.error, "", "error");
+                }finally{
+                    resetForm();
+                }
+            } else if (result.isDenied) {
+                Swal.fire("No se realizaron los cambios.", "", "info");
+            }
+        });
 
     } catch (error) {
         console.log(error);
     }
-
 }
 
 const createOrUpdate = () => {
