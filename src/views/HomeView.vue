@@ -7,8 +7,16 @@
     <section>
       <h2 class="text-center">Nuestros productos...</h2>
 
+      <div class="py-3 d-flex justify-content-center">
+        <RouterLink v-for="category in productStore.categories" :key="category" class="btn btn-outline-secondary mx-2"
+          :to="{ name: 'cagetory', params: { category } }">
 
-      <div class="row justify-content-start g-3 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4" v-if="productStore.products.length > 0">
+          {{ category }}
+        </RouterLink>
+      </div>
+
+      <div class="row justify-content-start g-3 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4"
+        v-if="productStore.products.length > 0">
         <div class="col" v-for="producto in productStore.products">
           <ProductCard :producto />
         </div>

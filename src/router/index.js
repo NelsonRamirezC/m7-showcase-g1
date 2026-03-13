@@ -31,6 +31,12 @@ const router = createRouter({
       name: 'register',
       component: () => import('../views/RegisterView.vue'),
     },
+    {
+      path: '/category/:category',
+      name: 'cagetory',
+      component: () => import('../views/CategoryView.vue'),
+      props: true,
+    },
   ],
 })
 

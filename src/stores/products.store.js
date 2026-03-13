@@ -18,6 +18,10 @@ export const useProductsStore = defineStore('products', () => {
   //   count.value++
   // }
 
+  const productsByCategory = (category) => {
+    return products.value.filter((p) => p.categoria == category)
+  }
+
   const fetchProducts = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, 'productos'))
@@ -85,5 +89,13 @@ export const useProductsStore = defineStore('products', () => {
     }
   }
 
-  return { products, categories, fetchProducts, createProduct, deleteProduct, updateProduct }
+  return {
+    products,
+    categories,
+    fetchProducts,
+    createProduct,
+    deleteProduct,
+    updateProduct,
+    productsByCategory,
+  }
 })
