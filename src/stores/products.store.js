@@ -11,7 +11,18 @@ export const useProductsStore = defineStore('products', () => {
   const categories = ref(['Hogar', 'Cocina', 'Jardín'])
 
   //GETTERS
-  // const doubleCount = computed(() => count.value * 2)
+
+  const productByName = computed(() => {
+    return (termino) => {
+      if (!termino) return products.value;
+      
+      const query = termino.toLowerCase();
+      return products.value.filter(p => 
+        p.nombre.toLowerCase().includes(query) || p.descripcion.toLowerCase().includes(query)
+      );
+    };
+  });
+
 
   //ACCTIONS
   // function increment() {
@@ -92,6 +103,7 @@ export const useProductsStore = defineStore('products', () => {
   return {
     products,
     categories,
+    productByName,
     fetchProducts,
     createProduct,
     deleteProduct,
