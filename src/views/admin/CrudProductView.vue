@@ -26,7 +26,7 @@
                 </div>
                 <div class="col-6">
                     <label class="form-label">Imagen:</label>
-                    <input type="url" class="form-control" required v-model="producto.imagen">
+                    <input type="url" class="form-control" name="image" required v-model="producto.imagen">
                 </div>
                 <div class="col-6">
                     <label class="form-label">Categoría:</label>
@@ -142,7 +142,7 @@ const update = async () => {
                     Swal.fire(respuesta.success, "", "success");
                 } catch (error) {
                     Swal.fire(respuesta.error, "", "error");
-                }finally{
+                } finally {
                     resetForm();
                 }
             } else if (result.isDenied) {
@@ -169,7 +169,7 @@ const createOrUpdate = () => {
 onMounted(async () => {
 
     try {
-        let respuesta = await productsStore.fetchProducts();
+        let respuesta = await productsStore.fetchAllProducts();
 
         if (respuesta.error) {
             return alert(respuesta.error);
