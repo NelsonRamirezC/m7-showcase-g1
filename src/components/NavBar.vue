@@ -12,6 +12,8 @@
                     <div class="navbar-nav ms-auto">
                         <RouterLink to="/" class="nav-link">Home</RouterLink>
 
+                        <RouterLink to="/about" class="nav-link">Nosotros</RouterLink>
+
                         <RouterLink v-if="isAdmin" :to="{ name: 'crud-products' }" class="nav-link">Crud productos
                         </RouterLink>
 

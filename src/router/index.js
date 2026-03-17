@@ -11,6 +11,11 @@ const router = createRouter({
       component: () => import('../views/HomeView.vue'),
     },
     {
+      path: '/about',
+      name: 'about',
+      component: () => import('../views/AboutView.vue'),
+    },
+    {
       path: '/admin',
       meta: { requiresAuth: true, requiresRole: 'admin' },
       children: [
@@ -36,6 +41,11 @@ const router = createRouter({
       name: 'cagetory',
       component: () => import('../views/CategoryView.vue'),
       props: true,
+    },
+    {
+      path: '/:pathMatch(.*)',
+      name: 'notfound',
+      component: () => import('../views/404View.vue'),
     },
   ],
 })

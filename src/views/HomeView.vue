@@ -2,8 +2,14 @@
 
   <HeaderComp>Página Home</HeaderComp>
 
-  <main class="container py-3">
+  <section>
+    <v-container>
+      <CarruselComp />
+    </v-container>
 
+  </section>
+
+  <main class="container py-3">
     <section>
       <div class="d-flex justify-content-between">
         <h2 class="text-center">Nuestros productos...</h2>
@@ -58,6 +64,7 @@
 <script setup>
 import HeaderComp from '@/components/HeaderComp.vue';
 import ProductCard from '@/components/ProductCard.vue';
+import CarruselComp from '@/components/vuetify_comp/CarruselComp.vue';
 import { useProductsStore } from '@/stores/products.store';
 import { onMounted, ref, computed, watch } from 'vue'
 
